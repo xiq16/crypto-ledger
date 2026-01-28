@@ -69,8 +69,8 @@ class PriceFeed:
         # coingecko uses ids instead of symbols
         # create dict for translation
         coingecko_coins = self.clients['coingecko'].get_coins_list()
-        coingecko_ids = [e['id'] for e in coingecko_coins]
-        coingecko_symbols = [e['symbol'] for e in coingecko_coins]
+        coingecko_ids = list(reversed([e['id'] for e in coingecko_coins]))
+        coingecko_symbols = list(reversed([e['symbol'] for e in coingecko_coins]))
         self.coingecko_dict = dict(zip(coingecko_symbols, coingecko_ids))
 
     def get_change_factor(self, asset: str, currency: str, date: str = None, die_on_failure: bool = True,
@@ -317,6 +317,8 @@ class CryptoLedger:
                                                               total_buy)
 
     def import_staking_rewards(self, path: str):
+        if not path.endswith("csv"):
+            return
         df = pd.read_csv(path)
         buy_col_name = "denom"
         date_col_name = "timestamp"
@@ -501,10 +503,10 @@ if __name__ == "__main__":
     his_staking = r'/Users/peterpanda/Repos/crypto-ledger/staking'
     manual_swaps_export = r'/Users/peterpanda/Repos/crypto-ledger/exports/manualSwap/manual.csv'
     asset_list = ['anchorust', 'USDT', 'BUSD', 'ERG', 'ETH', 'BTC', 'HBAR', 'LINK', 'SOL', 'KSM', 'DOT', 'ALGO',
-                  'RUNE', 'CKB', 'ADA', 'ATOM', 'OSMO', 'PYTH', 'AVAX', 'NEAR']
+                  'RUNE', 'CKB', 'ADA', 'ATOM', 'OSMO', 'PYTH', 'AVAX', 'NEAR', 'KAS', 'RENDER']
     ledgers = LedgerContainer(asset_list, his, 'ledger_db', manual_swaps_export, his_staking)
-    ledgers.print_summary(2024)
-    ledgers.summarize_sell_options(2024)
+    ledgers.print_summary(2025)
+    ledgers.summarize_sell_options(2025)
     print('\n## TOTAL VALUE ##')
     print(ledgers.get_total_portfolio_value())
     print('\n## COMPOSITION ## ')
